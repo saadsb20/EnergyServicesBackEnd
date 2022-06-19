@@ -11,7 +11,7 @@ contract EnergyServicesContract {
 
 
     // Initializing the Contract.
-    constructor() public {
+    constructor()  {
         creatorAdmin = msg.sender;
         userRoles[creatorAdmin] = Role.Admin;
         verifiedUsers[creatorAdmin] = true;
@@ -36,39 +36,41 @@ contract EnergyServicesContract {
         _;
     }
 
-    function BuyService(string memory _serviceId, string memory _station, string memory _cable,uint _value, address _beneficiary)
-    external verifiedUser(_beneficiary) returns (bool) {
+    function BuyService (string memory _serviceId, string memory _station, string memory _cable,uint _value, address payable _beneficiary)
+    external payable returns (bool) {
         Services[_serviceId] = ServiceDetail(_station,_cable,_value,_beneficiary);
-        if (keccak256(bytes(_cable)) == keccak256(bytes("a")) ) {
-            paymentAccepted(_contract,_value);
-        } else if(keccak256(bytes(_cable)) == keccak256(bytes("b")) ){
-            paymentAccepted(_contract,_value);
-        }else {
-            paymentAccepted(_contract,_value);
-        }
-        
         return true;
     }
+    function getServiceDetails(string memory _serviceId)
+    public
+    view
+    returns (
+        string memory,
+        string memory,
+        uint ,
+        address
+    )
+    {
+        return (
+        Services[_serviceId].Station,
+        Services[_serviceId].Cable,
+        Services[_serviceId].value,
+        Services[_serviceId].Beneficiary
+        );
+    }
 
-    function balaceOf()external view returns(uint) {
+    function balaceOf() external view returns(uint) {
         return address(this).balance;
     }
 
-    function paymentAccepted(address payable _to ,uint _value) public payable {
-        // Send returns a boolean value indicating success or failure.
-        // This function is not recommended for sending Ether.
-        uint a=address(this).balance-_value;
-        bool sent = _to.send(address(this).balance-a);
-        require(sent, "Failed to send Ether");
+    function ChangeBalance() external payable {
+        balances[msg.sender]+=msg.value;
     }
 
-
-    function paymentDenied(address payable _to,uint _value) public payable {
+    function GiveReward(address payable _to ,uint _value) public payable {
         // Send returns a boolean value indicating success or failure.
         // This function is not recommended for sending Ether.
-        uint a=address(this).balance-_value;
-        bool sent = _to.send(address(this).balance-a);
-        balances[_to]-=_value;
+        bool sent = _to.send(_value * (1 ether));
         require(sent, "Failed to send Ether");
     }
 
