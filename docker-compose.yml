@@ -2,19 +2,19 @@ version: "3.7"
 
 services:
   ernergydb:
-    container_name: Mongo-Energy-Servcies
+    container_name: Mongo-Energy-Services
     image: mongo
     ports:
       - '27017:27017'
     volumes:
       - ./data:/data/ernergydb
   mongo-express:
-    container_name: mongo-express-Energy-Servcies
+    container_name: mongo-express-Energy-Services
     image: mongo-express
     depends_on:
       - ernergydb
     environment:
-      - ME_CONFIG_MONGODB_SERVER=mongo-express-Energy-Servcies
+      - ME_CONFIG_MONGODB_SERVER=mongo-express-Energy-Services
     ports:
       - '8089:8081'
     volumes:
