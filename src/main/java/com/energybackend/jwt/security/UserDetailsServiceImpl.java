@@ -24,7 +24,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
       AppUser appUser=accountService.loadUserbyUsername(username);
       if(appUser==null) throw new UsernameNotFoundException("invalid user!");
-      //if(appUser.getActived()==0) throw new UsernameNotFoundException("account not activated!!!");
+      if(appUser.getActived()==0) throw new UsernameNotFoundException("account not activated!!!");
         Collection<GrantedAuthority>    authorities = new ArrayList<>();
         appUser.getRoles().forEach(r->{
             authorities.add(new SimpleGrantedAuthority(r.getRoleName()));
