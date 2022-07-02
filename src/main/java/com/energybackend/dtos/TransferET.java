@@ -7,9 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ServiceInput {
+public class TransferET {
     private String privateKey;
-    private String Station;
-    private String Cable;
-    private Long value;
+    private Long Amount;
 }

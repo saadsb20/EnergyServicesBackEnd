@@ -32,7 +32,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         //we will not use sessions
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests().antMatchers("/appUser/**","/appRoles/**").hasAuthority("ADMIN");
-        http.authorizeRequests().antMatchers("/login/**" ,"/register/**","/active/**","/actived/**","/checkEmail","/getUser/**","/getUserByAddress/**","/getService/**").permitAll();
+        http.authorizeRequests().antMatchers("/addService/**","/transferTo/**","/getEthBalance/**","/getWeiBalance/**","/accountBalance/**","/myServices/**").hasAuthority("USER");
+        http.authorizeRequests().antMatchers("/login/**"  ,"/transferTo/**" ,"/addRole/**" ,"/register/**","/active/**","/getAdmin/**","/getTotalSupply/**","/getServiceByDate/**","/actived/**","/checkEmail","/getUser/**","/getUserByAddress/**","/getService/**","/allServices/**").permitAll();
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(new JWTAuthenticationFilter(authenticationManager()));
         http.addFilterBefore(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);

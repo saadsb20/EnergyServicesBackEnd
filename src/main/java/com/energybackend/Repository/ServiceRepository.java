@@ -2,11 +2,12 @@ package com.energybackend.Repository;
 
 import com.energybackend.Entity.Service;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface ServiceRepository extends MongoRepository<Service,String> {
     Service findServiceByServiceId(String id);
-    List<Service> findAllByBeneficiary(String address);
+    List<Service> findAllByBeneficiary(String beneficiary);
+    List<Service> findAllByDate(LocalDate date);
 }

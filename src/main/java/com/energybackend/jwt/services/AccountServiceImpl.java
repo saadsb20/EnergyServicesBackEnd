@@ -1,5 +1,8 @@
 package com.energybackend.jwt.services;
 
+import com.energybackend.Services.ETServices;
+import com.energybackend.dtos.GiveReward;
+import com.energybackend.dtos.TransferET;
 import com.energybackend.jwt.dtos.*;
 import com.energybackend.jwt.entities.Code;
 import com.energybackend.jwt.entities.AppRole;
@@ -13,6 +16,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+
 @Service
 @Transactional
 public class AccountServiceImpl implements AccountService {
@@ -25,6 +30,7 @@ public class AccountServiceImpl implements AccountService {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     @Autowired
     private MailService mailService;
+
 
 
 
@@ -43,10 +49,34 @@ public class AccountServiceImpl implements AccountService {
         appUser.setPassword(bCryptPasswordEncoder.encode(password));
         appUser.setActived(0);
         appUser.setAddress(address);
+        AppRole appRole = appRoleRepository.findByRoleName("USER");
+        ArrayList<AppRole> roles = new ArrayList<AppRole>();
+        roles.add(appRole);
+        appUser.setRoles(roles);
         appUserRepository.save(appUser);
         UserInput userInput =new UserInput();
         userInput.setUser(address);
-        addRoleToUser(username,"USER");
+        return appUser;
+    }
+    @Override
+    public AppUser addAdmin(ArrayList<AppRole> roles,String username, String password, String comfirmPassword , String address) {
+        String _code = UserCode.getCode();
+        AppUser user = appUserRepository.findAppUserByUsername(username);
+        if(user!=null) throw new RuntimeException("the user already exist");
+        if(!password.equals(comfirmPassword)) throw  new RuntimeException("please comfirme your password");
+        AppUser appUser = new AppUser();
+        mailService.sendCodeByEmail(new MailDTO(username,_code));
+        Code code =new Code();
+        code.setCode(_code);
+        appUser.setUsername(username);
+        appUser.setCode(code);
+        appUser.setPassword(bCryptPasswordEncoder.encode(password));
+        appUser.setActived(0);
+        appUser.setAddress(address);
+        appUser.setRoles(roles);
+        appUserRepository.save(appUser);
+        UserInput userInput =new UserInput();
+        userInput.setUser(address);
         return appUser;
     }
 
@@ -81,11 +111,10 @@ public class AccountServiceImpl implements AccountService {
         AppUser appUser = appUserRepository.findAppUserByUsername(username);
         AppRole appRole =appRoleRepository.findByRoleName(role);
         appUser.getRoles().add(appRole);
-
     }
 
     @Override
-    public AccountResponse activeAccount(ActiveAccount activeAccount) {
+    public AccountResponse activeAccount(ActiveAccount activeAccount) throws Exception {
         AppUser appUser =appUserRepository.findAppUserByUsername(activeAccount.getUsername());
         AccountResponse accountResponse  = new AccountResponse();
         if (appUser.getCode().getCode().equals(activeAccount.getCode())){

@@ -7,9 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ServiceInput {
-    private String privateKey;
-    private String Station;
-    private String Cable;
-    private Long value;
+public class GetETBalance {
+    private String Address;
 }

@@ -7,6 +7,9 @@ import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDate;
+import java.util.Date;
+
 @Document
 @Data
 @AllArgsConstructor
@@ -18,6 +21,7 @@ public class Service {
     private String Station;
     private String Cable;
     private Long value;
-    private String Beneficiary;
+    private String beneficiary;
+    private LocalDate date;
 
 }

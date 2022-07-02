@@ -1,7 +1,9 @@
 package com.energybackend;
 
 import com.energybackend.jwt.entities.AppRole;
+import com.energybackend.jwt.repositories.AppRoleRepository;
 import com.energybackend.jwt.services.AccountService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,6 +13,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.stream.Stream;
 
 @SpringBootApplication
@@ -21,6 +24,8 @@ public class EnergyBackEndApplication {
     private final static BigInteger GAS_LIMIT = BigInteger.valueOf(6721975L);
     private final static BigInteger GAS_PRICE = BigInteger.valueOf(20000000000L);
     //private final static String CONTRACT_ADDRESS = "0xe4092726cad5e6c26d56354fb4ec8eba44b4cc9d";
+    @Autowired
+    private AppRoleRepository appRoleRepository;
 
     public static void main(String[] args) {
         SpringApplication.run(EnergyBackEndApplication.class, args);
@@ -54,10 +59,11 @@ public class EnergyBackEndApplication {
 //        return args -> {
 //            accountService.saveRole(new AppRole(null,"USER"));
 //            accountService.saveRole(new AppRole(null,"ADMIN"));
-//            Stream.of("admin@gmail.com").forEach(un->{
-//                accountService.addUser(un,"Admin123456","Admin123456","0xC54689c6fb6331c58427438eBB94b342FC747724");
-//            });
-//           accountService.addRoleToUser("admin@gmail.com","ADMIN");
+//            ArrayList<AppRole> roles = new ArrayList<AppRole>();
+//            roles.add(appRoleRepository.findByRoleName("USER"));
+//            roles.add(appRoleRepository.findByRoleName("ADMIN"));
+//            accountService.addAdmin(roles,"admin@gmail.com","Admin123456","Admin123456","0xC54689c6fb6331c58427438eBB94b342FC747724");
+//
 //
 //        };
 //    }
